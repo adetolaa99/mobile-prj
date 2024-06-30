@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   signUpText: {
-    fontSize: 20,
+    fontSize: 18,
     color: "#333",
   },
   signUpLink: {
-    fontSize: 20,
+    fontSize: 18,
     color: "#006400",
     textDecorationLine: "underline",
   },

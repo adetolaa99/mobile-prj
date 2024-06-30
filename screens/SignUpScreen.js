@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   signInText: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#333",
   },
   signInLink: {
-    fontSize: 16,
+    fontSize: 18,
     color: "#006400",
     textDecorationLine: "underline",
   },

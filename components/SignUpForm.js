@@ -10,29 +10,31 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignUpForm = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
-   const unsubscribe = navigation.addListener("focus", () => {
-     setLoading(false);
-     setErrorMessage("");
-   });
-   return unsubscribe;
-  }, [navigation]);
-  
-    const SignUpSchema = Yup.object().shape({
-      username: Yup.string().required("Required"),
-      email: Yup.string().email("Invalid email").required("Required"),
-      firstName: Yup.string().required("Required"),
-      lastName: Yup.string().required("Required"),
-      password: Yup.string()
-        .min(6, "Password must be at least 6 characters!")
-        .required("Required"),
+    const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(false);
+      setErrorMessage("");
     });
-  
+    return unsubscribe;
+  }, [navigation]);
+
+  const SignUpSchema = Yup.object().shape({
+    username: Yup.string().required("Required"),
+    email: Yup.string().email("Invalid email").required("Required"),
+    firstName: Yup.string().required("Required"),
+    lastName: Yup.string().required("Required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters!")
+      .required("Required"),
+  });
+
   const handleSignUp = (values) => {
     setLoading(true);
     setErrorMessage("");
@@ -52,103 +54,116 @@ const SignUpForm = ({ navigation }) => {
       });
   };
 
-   return (
-     <Formik
-       initialValues={{
-         username: "",
-         email: "",
-         firstName: "",
-         lastName: "",
-         password: "",
-       }}
-       validationSchema={SignUpSchema}
-       onSubmit={(values) => handleSignUp(values)}
-     >
-       {({
-         handleChange,
-         handleBlur,
-         handleSubmit,
-         values,
-         errors,
-         touched,
-       }) => (
-         <View style={styles.formContainer}>
-           <TextInput
-             placeholder="Username"
-             onChangeText={handleChange("username")}
-             onBlur={handleBlur("username")}
-             value={values.username}
-             style={styles.input}
-           />
-           {errors.username && touched.username ? (
-             <Text style={styles.error}>{errors.username}</Text>
-           ) : null}
+  return (
+    <Formik
+      initialValues={{
+        username: "",
+        email: "",
+        firstName: "",
+        lastName: "",
+        password: "",
+      }}
+      validationSchema={SignUpSchema}
+      onSubmit={(values) => handleSignUp(values)}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+      }) => (
+        <View style={styles.formContainer}>
+          <TextInput
+            placeholder="Username"
+            onChangeText={handleChange("username")}
+            onBlur={handleBlur("username")}
+            value={values.username}
+            style={styles.input}
+          />
+          {errors.username && touched.username ? (
+            <Text style={styles.error}>{errors.username}</Text>
+          ) : null}
 
-           <TextInput
-             placeholder="Email"
-             onChangeText={handleChange("email")}
-             onBlur={handleBlur("email")}
-             value={values.email}
-             style={styles.input}
-             keyboardType="email-address"
-           />
-           {errors.email && touched.email ? (
-             <Text style={styles.error}>{errors.email}</Text>
-           ) : null}
+          <TextInput
+            placeholder="Email"
+            onChangeText={handleChange("email")}
+            onBlur={handleBlur("email")}
+            value={values.email}
+            style={styles.input}
+            keyboardType="email-address"
+          />
+          {errors.email && touched.email ? (
+            <Text style={styles.error}>{errors.email}</Text>
+          ) : null}
 
-           <TextInput
-             placeholder="First Name"
-             onChangeText={handleChange("firstName")}
-             onBlur={handleBlur("firstName")}
-             value={values.firstName}
-             style={styles.input}
-           />
-           {errors.firstName && touched.firstName ? (
-             <Text style={styles.error}>{errors.firstName}</Text>
-           ) : null}
+          <TextInput
+            placeholder="First Name"
+            onChangeText={handleChange("firstName")}
+            onBlur={handleBlur("firstName")}
+            value={values.firstName}
+            style={styles.input}
+          />
+          {errors.firstName && touched.firstName ? (
+            <Text style={styles.error}>{errors.firstName}</Text>
+          ) : null}
 
-           <TextInput
-             placeholder="Last Name"
-             onChangeText={handleChange("lastName")}
-             onBlur={handleBlur("lastName")}
-             value={values.lastName}
-             style={styles.input}
-           />
-           {errors.lastName && touched.lastName ? (
-             <Text style={styles.error}>{errors.lastName}</Text>
-           ) : null}
+          <TextInput
+            placeholder="Last Name"
+            onChangeText={handleChange("lastName")}
+            onBlur={handleBlur("lastName")}
+            value={values.lastName}
+            style={styles.input}
+          />
+          {errors.lastName && touched.lastName ? (
+            <Text style={styles.error}>{errors.lastName}</Text>
+          ) : null}
 
-           <TextInput
-             placeholder="Password"
-             onChangeText={handleChange("password")}
-             onBlur={handleBlur("password")}
-             value={values.password}
-             style={styles.input}
-             secureTextEntry
-           />
-           {errors.password && touched.password ? (
-             <Text style={styles.error}>{errors.password}</Text>
-           ) : null}
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="Password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+              style={styles.passwordInput}
+              secureTextEntry={!passwordVisible}
+            />
+            <TouchableOpacity
+              onPress={() => setPasswordVisible(!passwordVisible)}
+              style={styles.iconContainer}
+            >
+              <Ionicons
+                name={passwordVisible ? "eye-off" : "eye"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
 
-           {errorMessage ? (
-             <Text style={styles.errorMessage}>{errorMessage}</Text>
-           ) : null}
+          {errors.password && touched.password ? (
+            <Text style={styles.error}>{errors.password}</Text>
+          ) : null}
 
-           {loading ? (
-             <ActivityIndicator
-               size="large"
-               color="#006400"
-               style={styles.loader}
-             />
-           ) : (
-             <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-               <Text style={styles.buttonText}>Create account</Text>
-             </TouchableOpacity>
-           )}
-         </View>
-       )}
-     </Formik>
-   );
+          {errorMessage ? (
+            <Text style={styles.errorMessage}>{errorMessage}</Text>
+          ) : null}
+
+          {loading ? (
+            <ActivityIndicator
+              size="large"
+              color="#006400"
+              style={styles.loader}
+            />
+          ) : (
+            <TouchableOpacity onPress={handleSubmit} style={styles.button}>
+              <Text style={styles.buttonText}>Create account</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+    </Formik>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -165,6 +180,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
     width: "100%",
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+  },
+  passwordInput: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
+  },
+  iconContainer: {
+    paddingHorizontal: 10,
   },
   error: {
     color: "red",

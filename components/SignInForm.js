@@ -7,14 +7,17 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignInForm = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
@@ -31,7 +34,7 @@ const SignInForm = ({ navigation }) => {
 
   const handleSignIn = async (values) => {
     setLoading(true);
-    setErrorMessage(""); 
+    setErrorMessage("");
     try {
       const response = await axios.post(
         "http://172.20.10.5:8080/api/users/login",
@@ -41,7 +44,7 @@ const SignInForm = ({ navigation }) => {
       const { token, profile } = response.data;
       await AsyncStorage.setItem("authToken", token);
       await AsyncStorage.setItem("profile", JSON.stringify(profile));
-      navigation.navigate("Home");
+      navigation.replace("App");
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -78,14 +81,27 @@ const SignInForm = ({ navigation }) => {
             <Text style={styles.error}>{errors.identifier}</Text>
           ) : null}
 
-          <TextInput
-            placeholder="Password"
-            onChangeText={handleChange("password")}
-            onBlur={handleBlur("password")}
-            value={values.password}
-            style={styles.input}
-            secureTextEntry
-          />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              placeholder="Password"
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+              style={styles.passwordInput}
+              secureTextEntry={!passwordVisible}
+            />
+            <TouchableOpacity
+              onPress={() => setPasswordVisible(!passwordVisible)}
+              style={styles.iconContainer}
+            >
+              <Ionicons
+                name={passwordVisible ? "eye-off" : "eye"}
+                size={24}
+                color="gray"
+              />
+            </TouchableOpacity>
+          </View>
+
           {errors.password && touched.password ? (
             <Text style={styles.error}>{errors.password}</Text>
           ) : null}
@@ -125,6 +141,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#fff",
     width: "100%",
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+  },
+  passwordInput: {
+    flex: 1,
+    height: 40,
+    paddingHorizontal: 10,
+  },
+  iconContainer: {
+    paddingHorizontal: 10,
   },
   error: {
     color: "red",

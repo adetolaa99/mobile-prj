@@ -17,7 +17,7 @@ const ActivateAccountForm = () => {
 
   const handleActivate = async () => {
     if (!publicKey) {
-      Alert.alert("Error", "Please enter your public key");
+      Alert.alert("Error!", "Please enter your public key");
       return;
     }
     setLoading(true);
@@ -25,7 +25,7 @@ const ActivateAccountForm = () => {
     try {
       const token = await AsyncStorage.getItem("authToken");
       if (!token) {
-        Alert.alert("Error", "No auth token found");
+        Alert.alert("Error!", "No auth token found");
         setLoading(false);
         return;
       }
@@ -40,7 +40,7 @@ const ActivateAccountForm = () => {
         }
       );
       Alert.alert(
-        "Success",
+        "Success!",
         "10,000 FUC Tokens have been sent to your account!"
       );
     } catch (error) {

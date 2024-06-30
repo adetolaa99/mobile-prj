@@ -20,7 +20,7 @@ const TransactionScreen = () => {
       try {
         const token = await AsyncStorage.getItem("authToken");
         if (!token) {
-          Alert.alert("Error", "No token found! Please log in again.");
+          Alert.alert("Error!", "No token found! Please log in again.");
           setLoading(false);
           return;
         }
@@ -36,7 +36,7 @@ const TransactionScreen = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (response.data.length === 0) {
-          Alert.alert("Info", "No transactions found.");
+          Alert.alert("Info", "No transactions found!");
         } else {
           setTransactions(response.data);
         }

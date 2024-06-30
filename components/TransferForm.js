@@ -29,7 +29,7 @@ const TransferForm = () => {
     try {
       const token = await AsyncStorage.getItem("authToken");
       if (!token) {
-        Alert.alert("Error", "No auth token found. Please log in again.");
+        Alert.alert("Error!", "No auth token found. Please log in again.");
         setLoading(false);
         return;
       }

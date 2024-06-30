@@ -19,8 +19,9 @@ const TransferScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
           <Text style={styles.title}>
-            Transfer FUC tokens to another user by entering the Receiver's
-            public key and the amount you wish to transfer.
+            Transfer <Text style={styles.highlight}>FUC</Text> to another
+            user by entering the Receiver's public key and the amount you wish
+            to transfer.
           </Text>
           <TransferForm />
         </View>
@@ -32,22 +33,28 @@ const TransferScreen = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     padding: 20,
+    paddingTop: 30,
     backgroundColor: "#f5f5f5",
   },
   title: {
     fontSize: 20,
-    lineHeight: 28,
-    marginBottom: 50,
+    fontWeight: "bold",
+    lineHeight: 34,
+    marginBottom: 20,
     textAlign: "center",
     color: "#333",
     paddingHorizontal: 20,
+  },
+  highlight: {
+    color: "#006400",
+    fontWeight: "bold",
   },
 });
 

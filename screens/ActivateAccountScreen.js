@@ -19,9 +19,12 @@ const ActivateAccountScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
           <Text style={styles.title}>
-            Enter your Public key below to activate your Wallet. You will be
-            credited with 10,000 FUC tokens to carry out all financial
-            activities within the app.
+            Enter your Public key below to activate your Wallet.
+          </Text>
+          <Text style={styles.subtitle}>
+            You will be credited with{" "}
+            <Text style={styles.highlight}>10,000 FUC tokens</Text> to carry out
+            all financial activities within the app.
           </Text>
           <ActivateAccountForm />
         </View>
@@ -33,22 +36,35 @@ const ActivateAccountScreen = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     padding: 20,
+    paddingTop: 30,
     backgroundColor: "#f5f5f5",
   },
   title: {
-    fontSize: 18,
-    lineHeight: 28,
-    marginBottom: 30,
+    fontSize: 20,
+    fontWeight: "bold",
+    lineHeight: 34,
+    marginBottom: 10,
     textAlign: "center",
     color: "#333",
+  },
+  subtitle: {
+    fontSize: 18,
+    lineHeight: 26,
+    marginBottom: 10,
+    textAlign: "center",
+    color: "#666",
     paddingHorizontal: 20,
+  },
+  highlight: {
+    color: "#006400",
+    fontWeight: "bold",
   },
 });
 

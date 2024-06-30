@@ -115,13 +115,6 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={styles.revealButtonText}>Reveal Secret Key</Text>
         </TouchableOpacity>
       )}
-
-      <TouchableOpacity
-        style={styles.homeButton}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <Text style={styles.homeButtonText}>Back to Home</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -129,8 +122,9 @@ const ProfileScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 20,
+    paddingTop: 30,
     backgroundColor: "#f5f5f5",
   },
   label: {
@@ -166,18 +160,6 @@ const styles = StyleSheet.create({
   },
   revealButtonText: {
     color: "green",
-    fontWeight: "bold",
-  },
-  homeButton: {
-    marginTop: 20,
-    backgroundColor: "#006400",
-    padding: 15,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  homeButtonText: {
-    color: "#fff",
-    fontSize: 16,
     fontWeight: "bold",
   },
 });

@@ -1,8 +1,8 @@
 import React from "react";
-import Navigator from './navigation/navigator';
+import RootNavigator from "./navigation/RootNavigator.js";
 
 export default function App() {
-    return <Navigator/>
+    return <RootNavigator/>
 }
 
 

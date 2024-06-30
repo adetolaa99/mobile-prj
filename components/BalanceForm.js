@@ -23,13 +23,13 @@ const BalanceForm = () => {
           handleCheckBalance(profile.stellarPublicKey);
         } else {
           Alert.alert(
-            "Error",
+            "Error!",
             "Public key not found. Please ensure you are logged in."
           );
         }
       } catch (error) {
         Alert.alert(
-          "Error",
+          "Error!",
           "Failed to retrieve profile data. Please try again."
         );
       }
@@ -53,7 +53,7 @@ const BalanceForm = () => {
       setBalances(response.data.balances);
     } catch (error) {
       Alert.alert(
-        "Error",
+        "Error!",
         error.response ? error.response.data : "Something went wrong!"
       );
     } finally {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   balancesContainer: {
-    marginTop: 30,
+    marginTop: 15,
     width: "100%",
   },
   balanceItem: {
