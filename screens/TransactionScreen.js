@@ -73,7 +73,7 @@ const TransactionScreen = () => {
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#006400" />
       ) : (
         <FlatList
           data={transactions}
