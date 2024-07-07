@@ -20,7 +20,7 @@ const TransferScreen = () => {
         <View style={styles.container}>
           <Text style={styles.title}>
             Transfer <Text style={styles.highlight}>FUC</Text> to another
-            user by entering the Receiver's public key and the amount you wish
+            user by entering the Receiver's public key and the amount of tokens you wish
             to transfer.
           </Text>
           <TransferForm />

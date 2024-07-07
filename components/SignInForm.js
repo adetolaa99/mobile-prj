@@ -46,12 +46,20 @@ const SignInForm = ({ navigation }) => {
       await AsyncStorage.setItem("profile", JSON.stringify(profile));
       navigation.replace("App");
     } catch (error) {
-      console.error(error);
+      console.error("Login error:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        setErrorMessage(error.response.data.message || "An error occurred.");
+      } else if (error.request) {
+        // The request was made, but no response was received
+        console.error("Request data:", error.request);
+        setErrorMessage("No response received from the server.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+        setErrorMessage("Error setting up request.");
+      }
       setLoading(false);
-      setErrorMessage(
-        error.response?.data?.message ||
-          "User not found! Please check your details and try again"
-      );
     }
   };
 

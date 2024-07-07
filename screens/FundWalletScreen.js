@@ -7,9 +7,9 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import BalanceForm from "../components/BalanceForm.js";
+import FundWalletForm from "../components/FundWalletForm.js";
 
-const BalanceScreen = () => {
+const FundWalletScreen = () => {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -18,17 +18,11 @@ const BalanceScreen = () => {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.container}>
+          <Text style={styles.title}>NOTE: 1 FUC = 1 NAIRA</Text>
           <Text style={styles.title}>
-            The balance of your <Text style={styles.highlight}>FUC</Text> tokens
-            and Stellar <Text style={styles.highlight}>XLM</Text> is displayed
-            below.
+            Enter the amount of tokens you wish to fund and proceed to payment.
           </Text>
-          <Text style={styles.subtitle}>
-            <Text style={styles.highlight}>FUC </Text>is used to transact while{" "}
-            <Text style={styles.highlight}>XLM</Text> is used to handle the gas
-            fee on each transaction.
-          </Text>
-          <BalanceForm />
+          <FundWalletForm />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -52,21 +46,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     lineHeight: 34,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: "center",
     color: "#333",
   },
-  subtitle: {
-    fontSize: 18,
-    lineHeight: 26,
-    textAlign: "center",
-    color: "#666",
-    paddingHorizontal: 20,
-  },
-  highlight: {
-    color: "#006400",
-    fontWeight: "bold",
-  },
 });
 
-export default BalanceScreen;
+export default FundWalletScreen;
