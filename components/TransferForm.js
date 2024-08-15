@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const TransferForm = () => {
+const TransferForm = forwardRef((props, ref) => {
   const [receiverPublicKey, setReceiverPublicKey] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,11 +35,14 @@ const TransferForm = () => {
       }
 
       const response = await axios.post(
-        "http://172.20.10.5:8080/api/stellar/transfer",
+        "http://172.20.10.2:8080/api/stellar/transfer",
         { receiverPublicKey, amount },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      Alert.alert("Success!", "You've successfully transferred FUC to another user");
+      Alert.alert(
+        "Success!",
+        "You've successfully transferred FUC to another user"
+      );
     } catch (error) {
       let errorMessage = "Something went wrong";
       if (error.response) {
@@ -58,6 +61,17 @@ const TransferForm = () => {
       setLoading(false);
     }
   };
+
+  const resetForm = () => {
+    setReceiverPublicKey("");
+    setAmount("");
+  };
+
+  useImperativeHandle(ref, () => ({
+    refreshForm: () => {
+      resetForm();
+    },
+  }));
 
   return (
     <View style={styles.formContainer}>
@@ -87,7 +101,7 @@ const TransferForm = () => {
       </TouchableOpacity>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   formContainer: {

@@ -37,7 +37,7 @@ const SignInForm = ({ navigation }) => {
     setErrorMessage("");
     try {
       const response = await axios.post(
-        "http://172.20.10.5:8080/api/users/login",
+        "http://172.20.10.2:8080/api/users/login",
         values
       );
       console.log("Login response data:", response.data);

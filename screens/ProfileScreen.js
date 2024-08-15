@@ -28,7 +28,7 @@ const ProfileScreen = ({ navigation }) => {
         }
 
         const response = await axios.get(
-          "http://172.20.10.5:8080/api/users/profile",
+          "http://172.20.10.2:8080/api/users/profile",
           {
             headers: {
               Authorization: `Bearer ${token}`,

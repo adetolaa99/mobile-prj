@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -6,24 +6,43 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
 } from "react-native";
 import TransferForm from "../components/TransferForm.js";
 
 const TransferScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+   const transferFormRef = useRef(null);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    if (transferFormRef.current) {
+      transferFormRef.current.refreshForm();
+    }
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={60}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.container}>
           <Text style={styles.title}>
-            Transfer <Text style={styles.highlight}>FUC</Text> to another
-            user by entering the Receiver's public key and the amount of tokens you wish
-            to transfer.
+            Transfer <Text style={styles.highlight}>FUC</Text> to another user
+            by entering the Receiver's public key and the amount of tokens you
+            wish to transfer.
           </Text>
-          <TransferForm />
+          <TransferForm ref={transferFormRef} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

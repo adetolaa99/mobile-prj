@@ -1,9 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const BalanceForm = () => {
+const BalanceForm = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState([]);
   const [publicKey, setPublicKey] = useState(null);
@@ -43,7 +48,7 @@ const BalanceForm = () => {
     try {
       const token = await AsyncStorage.getItem("authToken");
       const response = await axios.get(
-        `http://172.20.10.5:8080/api/stellar/check-balance/${publicKey}`,
+        `http://172.20.10.2:8080/api/stellar/check-balance/${publicKey}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,6 +65,14 @@ const BalanceForm = () => {
       setLoading(false);
     }
   };
+
+  useImperativeHandle(ref, () => ({
+    refreshBalances: () => {
+      if (publicKey) {
+        handleCheckBalance(publicKey);
+      }
+    },
+  }));
 
   return (
     <View style={styles.formContainer}>
@@ -81,7 +94,7 @@ const BalanceForm = () => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   formContainer: {

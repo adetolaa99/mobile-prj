@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  RefreshControl,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,40 +15,47 @@ import { jwtDecode } from "jwt-decode";
 const TransactionScreen = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchTransactions = async () => {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      if (!token) {
+        Alert.alert("Error!", "No token found! Please log in again.");
+        setLoading(false);
+        return;
+      }
+
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;
+
+      if (!userId) {
+        throw new Error("User ID not found in token");
+      }
+      const response = await axios.get(
+        "http://172.20.10.2:8080/api/stellar/transactions/${userId}",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.data.length === 0) {
+        Alert.alert("Info", "No transactions found!");
+      } else {
+        setTransactions(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      Alert.alert("Error", "Failed to fetch transactions. Please try again.");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (!token) {
-          Alert.alert("Error!", "No token found! Please log in again.");
-          setLoading(false);
-          return;
-        }
+    fetchTransactions();
+  }, []);
 
-        const decodedToken = jwtDecode(token);
-        const userId = decodedToken.userId;
-
-        if (!userId) {
-          throw new Error("User ID not found in token");
-        }
-        const response = await axios.get(
-          "http://172.20.10.5:8080/api/stellar/transactions/${userId}",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        if (response.data.length === 0) {
-          Alert.alert("Info", "No transactions found!");
-        } else {
-          setTransactions(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-        Alert.alert("Error", "Failed to fetch transactions. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
     fetchTransactions();
   }, []);
 
@@ -83,6 +91,9 @@ const TransactionScreen = () => {
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>No transactions found</Text>
             </View>
+          }
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
       )}
@@ -125,4 +136,5 @@ const styles = StyleSheet.create({
     color: "#888",
   },
 });
+
 export default TransactionScreen;

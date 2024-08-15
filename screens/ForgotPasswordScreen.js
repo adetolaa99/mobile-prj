@@ -24,7 +24,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
     try {
       const response = await axios.post(
-        "http://172.20.10.5:8080/api/users/send-reset-password-email",
+        "http://172.20.10.2:8080/api/users/send-reset-password-email",
         { email }
       );
       Alert.alert("Success!", response.data.message);

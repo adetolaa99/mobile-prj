@@ -25,7 +25,7 @@ const ResetPasswordScreen = ({ route, navigation }) => {
 
     try {
       const response = await axios.post(
-        "http://172.20.10.5:8080/api/users/reset-password",
+        "http://172.20.10.2:8080/api/users/reset-password",
         { token, newPassword }
       );
       Alert.alert("Success", response.data.message);

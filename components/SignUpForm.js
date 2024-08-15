@@ -39,7 +39,7 @@ const SignUpForm = ({ navigation }) => {
     setLoading(true);
     setErrorMessage("");
     axios
-      .post("http://172.20.10.5:8080/api/users/signup", values)
+      .post("http://172.20.10.2:8080/api/users/signup", values)
       .then((response) => {
         console.log(response.data);
         navigation.navigate("Sign In");

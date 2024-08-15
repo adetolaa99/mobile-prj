@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -6,23 +6,43 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
 } from "react-native";
 import FundWalletForm from "../components/FundWalletForm.js";
 
 const FundWalletScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const fundFormRef = useRef(null);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    if (fundFormRef.current) {
+      fundFormRef.current.refreshForm();
+    }
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={60}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.container}>
           <Text style={styles.title}>NOTE: 1 FUC = 1 NAIRA</Text>
           <Text style={styles.title}>
-            Enter the amount of tokens you wish to fund and proceed to payment.
+            Enter the amount of tokens you wish to purchase and proceed to
+            payment.
           </Text>
-          <FundWalletForm />
+          <FundWalletForm ref={fundFormRef} onRefresh={onRefresh} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

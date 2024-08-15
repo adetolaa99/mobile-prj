@@ -1,4 +1,4 @@
-import React, { useState, } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 import {
   View,
   Text,
@@ -13,12 +13,14 @@ import { WebView } from "react-native-webview";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 
-const FundWalletForm = () => {
+const FundWalletForm = forwardRef((props, ref) => {
+  const { onRefresh } = props;
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [paymentIntent, setPaymentIntent] = useState(null);
   const [showWebView, setShowWebView] = useState(false);
   const [authorizationUrl, setAuthorizationUrl] = useState("");
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
 
   const handleFundWallet = async () => {
     if (!amount) {
@@ -36,7 +38,7 @@ const FundWalletForm = () => {
       }
 
       const response = await axios.post(
-        "http://172.20.10.5:8080/api/paystack/create-payment-intent",
+        "http://172.20.10.2:8080/api/paystack/create-payment-intent",
         {
           amount: amount,
         },
@@ -62,6 +64,7 @@ const FundWalletForm = () => {
   };
 
   const handlePaymentSuccess = async (reference) => {
+    setVerifyingPayment(true); // Set verifyingPayment to true when payment verification starts
     try {
       const token = await AsyncStorage.getItem("authToken");
       if (!token) {
@@ -76,7 +79,7 @@ const FundWalletForm = () => {
       console.log("Verifying payment with reference: ", reference);
 
       const response = await axios.post(
-        "http://172.20.10.5:8080/api/paystack/verify-payment",
+        "http://172.20.10.2:8080/api/paystack/verify-payment",
         {
           reference: reference,
         },
@@ -91,7 +94,7 @@ const FundWalletForm = () => {
       if (response.data.success) {
         console.log("Verification successful. Minting tokens...");
         const mintResponse = await axios.post(
-          "http://172.20.10.5:8080/api/paystack/mint-tokens",
+          "http://172.20.10.2:8080/api/paystack/mint-tokens",
           {
             userId: userId,
             amount: amount,
@@ -104,19 +107,22 @@ const FundWalletForm = () => {
         );
         console.log("Mint Tokens Response: ", mintResponse.data);
         Alert.alert("Success", "You've successfully funded your wallet!");
+        onRefresh();
       } else {
         Alert.alert("Error", "Payment verification failed!");
       }
     } catch (error) {
       console.error("Payment verification error: ", error);
       Alert.alert("Error", "Payment verification failed");
+    } finally {
+      setVerifyingPayment(false); // Set verifyingPayment to false when the process is complete
     }
   };
 
   const handleWebViewNavigationStateChange = (navState) => {
     console.log("WebView Navigation State Change: ", navState.url);
     if (
-      navState.url.includes("https://172.20.10.5:8080/api/paystack/callback")
+      navState.url.includes("https://172.20.10.2:8080/api/paystack/callback")
     ) {
       setShowWebView(false);
       const urlParams = new URLSearchParams(navState.url.split("?")[1]);
@@ -124,6 +130,16 @@ const FundWalletForm = () => {
       handlePaymentSuccess(reference);
     }
   };
+
+  const resetForm = () => {
+    setAmount("");
+  };
+
+  useImperativeHandle(ref, () => ({
+    refreshForm: () => {
+      resetForm();
+    },
+  }));
 
   return (
     <View style={styles.formContainer}>
@@ -137,7 +153,7 @@ const FundWalletForm = () => {
       <TouchableOpacity
         style={styles.button}
         onPress={handleFundWallet}
-        disabled={loading}
+        disabled={loading || verifyingPayment} // Disable button during verification
       >
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
@@ -145,6 +161,16 @@ const FundWalletForm = () => {
           <Text style={styles.buttonText}>Fund Wallet</Text>
         )}
       </TouchableOpacity>
+
+      {verifyingPayment && (
+        <View style={styles.verifyingContainer}>
+          <ActivityIndicator size="small" color="#006400" />
+          <Text style={styles.verifyingText}>
+            Please wait, verifying payment...
+          </Text>
+        </View>
+      )}
+
       {showWebView && (
         <WebView
           source={{ uri: authorizationUrl }}
@@ -158,7 +184,7 @@ const FundWalletForm = () => {
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   formContainer: {
@@ -186,6 +212,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  verifyingContainer: {
+    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  verifyingText: {
+    color: "#006400",
+    marginTop: 10,
   },
 });
 

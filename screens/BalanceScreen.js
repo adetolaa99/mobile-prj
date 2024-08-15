@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -6,17 +6,36 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
 } from "react-native";
 import BalanceForm from "../components/BalanceForm.js";
 
 const BalanceScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const balanceFormRef = useRef(null);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    if (balanceFormRef.current) {
+      balanceFormRef.current.refreshBalances();
+    }
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={60}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.container}>
           <Text style={styles.title}>
             The balance of your <Text style={styles.highlight}>FUC</Text> tokens
@@ -28,7 +47,7 @@ const BalanceScreen = () => {
             <Text style={styles.highlight}>XLM</Text> is used to handle the gas
             fee on each transaction.
           </Text>
-          <BalanceForm />
+          <BalanceForm ref={balanceFormRef} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
