@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
     try {
       const response = await axios.post(
-        "http://172.20.10.2:8080/api/users/send-reset-password-email",
+        `${API_URL}/users/send-reset-password-email`,
         { email }
       );
       Alert.alert("Success!", response.data.message);

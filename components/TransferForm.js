@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TransferForm = forwardRef((props, ref) => {
@@ -35,7 +36,7 @@ const TransferForm = forwardRef((props, ref) => {
       }
 
       const response = await axios.post(
-        "http://172.20.10.2:8080/api/stellar/transfer",
+        `${API_URL}/stellar/transfer`,
         { receiverPublicKey, amount },
         { headers: { Authorization: `Bearer ${token}` } }
       );

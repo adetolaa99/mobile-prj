@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -36,10 +37,7 @@ const SignInForm = ({ navigation }) => {
     setLoading(true);
     setErrorMessage("");
     try {
-      const response = await axios.post(
-        "http://172.20.10.2:8080/api/users/login",
-        values
-      );
+      const response = await axios.post(`${API_URL}/users/login`, values);
       console.log("Login response data:", response.data);
       const { token, profile } = response.data;
       await AsyncStorage.setItem("authToken", token);

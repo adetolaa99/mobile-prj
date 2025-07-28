@@ -9,6 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from "expo-clipboard";
 
@@ -27,14 +28,11 @@ const ProfileScreen = ({ navigation }) => {
           return;
         }
 
-        const response = await axios.get(
-          "http://172.20.10.2:8080/api/users/profile",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setProfile(response.data);
       } catch (err) {
         setError(err.message);

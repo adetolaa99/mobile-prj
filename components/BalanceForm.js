@@ -6,6 +6,7 @@ import React, {
 } from "react";
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BalanceForm = forwardRef((props, ref) => {
@@ -48,7 +49,7 @@ const BalanceForm = forwardRef((props, ref) => {
     try {
       const token = await AsyncStorage.getItem("authToken");
       const response = await axios.get(
-        `http://172.20.10.2:8080/api/stellar/check-balance/${publicKey}`,
+        `${API_URL}/stellar/check-balance/${publicKey}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -9,6 +9,7 @@ import {
   RefreshControl,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 
@@ -33,7 +34,7 @@ const TransactionScreen = () => {
         throw new Error("User ID not found in token");
       }
       const response = await axios.get(
-        "http://172.20.10.2:8080/api/stellar/transactions/${userId}",
+        `${API_URL}/stellar/transactions/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (response.data.length === 0) {

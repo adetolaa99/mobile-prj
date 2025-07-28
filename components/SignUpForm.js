@@ -10,6 +10,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import { Ionicons } from "@expo/vector-icons";
 
 const SignUpForm = ({ navigation }) => {
@@ -39,7 +40,7 @@ const SignUpForm = ({ navigation }) => {
     setLoading(true);
     setErrorMessage("");
     axios
-      .post("http://172.20.10.2:8080/api/users/signup", values)
+      .post(`${API_URL}/users/signup`, values)
       .then((response) => {
         console.log(response.data);
         navigation.navigate("Sign In");

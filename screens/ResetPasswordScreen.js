@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 
 const ResetPasswordScreen = ({ route, navigation }) => {
   const { token } = route.params;
@@ -24,10 +25,10 @@ const ResetPasswordScreen = ({ route, navigation }) => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://172.20.10.2:8080/api/users/reset-password",
-        { token, newPassword }
-      );
+      const response = await axios.post(`${API_URL}/users/reset-password`, {
+        token,
+        newPassword,
+      });
       Alert.alert("Success", response.data.message);
       navigation.navigate("Sign In");
     } catch (error) {

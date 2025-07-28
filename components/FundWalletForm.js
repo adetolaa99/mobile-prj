@@ -9,6 +9,7 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios";
+import { API_URL } from "../config/api";
 import { WebView } from "react-native-webview";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
@@ -38,7 +39,7 @@ const FundWalletForm = forwardRef((props, ref) => {
       }
 
       const response = await axios.post(
-        "http://172.20.10.2:8080/api/paystack/create-payment-intent",
+        `${API_URL}/paystack/create-payment-intent`,
         {
           amount: amount,
         },
@@ -79,7 +80,7 @@ const FundWalletForm = forwardRef((props, ref) => {
       console.log("Verifying payment with reference: ", reference);
 
       const response = await axios.post(
-        "http://172.20.10.2:8080/api/paystack/verify-payment",
+        `${API_URL}/paystack/verify-payment`,
         {
           reference: reference,
         },
@@ -94,7 +95,7 @@ const FundWalletForm = forwardRef((props, ref) => {
       if (response.data.success) {
         console.log("Verification successful. Minting tokens...");
         const mintResponse = await axios.post(
-          "http://172.20.10.2:8080/api/paystack/mint-tokens",
+          `${API_URL}/paystack/mint-tokens`,
           {
             userId: userId,
             amount: amount,
@@ -122,7 +123,7 @@ const FundWalletForm = forwardRef((props, ref) => {
   const handleWebViewNavigationStateChange = (navState) => {
     console.log("WebView Navigation State Change: ", navState.url);
     if (
-      navState.url.includes("https://172.20.10.2:8080/api/paystack/callback")
+      navState.url.includes("https://192.168.0.199:8080/api/paystack/callback")
     ) {
       setShowWebView(false);
       const urlParams = new URLSearchParams(navState.url.split("?")[1]);
