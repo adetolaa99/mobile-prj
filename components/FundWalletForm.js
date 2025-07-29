@@ -123,7 +123,7 @@ const FundWalletForm = forwardRef((props, ref) => {
   const handleWebViewNavigationStateChange = (navState) => {
     console.log("WebView Navigation State Change: ", navState.url);
     if (
-      navState.url.includes("https://192.168.0.199:8080/api/paystack/callback")
+      navState.url.includes("https://192.168.0.200:8080/api/paystack/callback")
     ) {
       setShowWebView(false);
       const urlParams = new URLSearchParams(navState.url.split("?")[1]);

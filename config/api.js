@@ -1,7 +1,7 @@
 const ENV = "development"; //"production"
 
 const BASE_URLS = {
-  development: "http://192.168.0.199:8080",
+  development: "http://192.168.0.200:8080",
   production: "",
 };
 

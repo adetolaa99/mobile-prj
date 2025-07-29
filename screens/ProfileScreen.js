@@ -52,6 +52,18 @@ const ProfileScreen = ({ navigation }) => {
     );
   };
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.multiRemove(["authToken", "profile"]);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Auth" }],
+      });
+    } catch (error) {
+      Alert.alert("Error", "Failed to logout");
+    }
+  };
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -113,6 +125,10 @@ const ProfileScreen = ({ navigation }) => {
           <Text style={styles.revealButtonText}>Reveal Secret Key</Text>
         </TouchableOpacity>
       )}
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -158,6 +174,18 @@ const styles = StyleSheet.create({
   },
   revealButtonText: {
     color: "green",
+    fontWeight: "bold",
+  },
+  logoutButton: {
+    backgroundColor: "#dc3545",
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 30,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });
